@@ -5,6 +5,22 @@ import java.util.List;
 public class TaskRepo {
     private static final String URL = "jdbc:sqlite:tasks.db";
 
+    public static void initDatabase() {
+        String sql = "CREATE TABLE IF NOT EXISTS tasks (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "title TEXT NOT NULL, " +
+                "description TEXT, " +
+                "is_done INTEGER DEFAULT 0" +
+                ");";
+
+        try (Connection conn = DriverManager.getConnection(URL);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println("Error" + e.getMessage());
+        }
+    }
+
     public static List<Task> getAllTasks() {
         List<Task> list = new ArrayList<>();
         String sql = "SELECT id, title, description, is_done FROM tasks";
